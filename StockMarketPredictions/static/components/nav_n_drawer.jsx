@@ -15,6 +15,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import HomeIcon from '@material-ui/icons/Home';
+import InfoIcon from '@material-ui/icons/Info';
 
 export default class Nav_n_Drawer extends React.Component {
 	constructor(props) {
@@ -65,7 +66,6 @@ class FreeDrawer extends React.Component {
 	render() {
 		return (
 			<div>
-				{/* <Button onClick={() => this.setState({show: true})}>Open Left</Button> */}
 				<Drawer open={this.props.show} onClose={() => this.props.closeDrawer()}>
 					<div
 						role="presentation"
@@ -73,10 +73,18 @@ class FreeDrawer extends React.Component {
 						onKeyDown={() => this.props.closeDrawer()}
 					>
 						<List>
-							<ListItem button key="Home">
-								<ListItemIcon><HomeIcon /></ListItemIcon>
-								<ListItemText primary="Home" />
-							</ListItem>
+							<Link href="/" underline="none" color="inherit">
+								<ListItem button key="Home">
+									<ListItemIcon><HomeIcon /></ListItemIcon>
+									<ListItemText primary="Home" />
+								</ListItem>
+							</Link>
+							<Link href="/about" underline="none" color="inherit">
+								<ListItem button key="About">
+									<ListItemIcon><InfoIcon /></ListItemIcon>
+									<ListItemText primary="About" />
+								</ListItem>
+							</Link>
 						</List>
 					</div>
 				</Drawer>
