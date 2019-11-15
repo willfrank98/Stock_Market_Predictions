@@ -1,5 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Graph from "./graph";
+// import Navbar from "./navbar";
+import Graph from "./graph"
+// import FreeDrawer from "./drawer"
+import Nav_n_Drawer from "./nav_n_drawer"
 
-ReactDOM.render(<Graph />, document.getElementById("content"));
+class Index extends React.Component {
+	render() {
+		return (
+			<React.Fragment>
+				<Nav_n_Drawer />
+
+				<Graph days="1"/>
+			</React.Fragment>
+		);
+	}
+}
+
+ReactDOM.render(
+	<Index />,
+	document.getElementById("content")
+);

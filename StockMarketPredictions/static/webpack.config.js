@@ -1,11 +1,19 @@
 const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
     entry:  {
 		bundle: __dirname + '/components/index.jsx',
 		style: __dirname + '/components/style.jsx'
 	},
-    output: {
+	// plugins: [
+	// 	new CleanWebpackPlugin(),
+	// 	new HtmlWebpackPlugin({
+	// 		title: 'Caching',
+	// 	}),
+	// ],
+	output: {
         path: __dirname + '/dist',
         filename: '[name].js',
     },
