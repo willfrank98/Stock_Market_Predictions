@@ -66,7 +66,7 @@ class FreeDrawer extends React.Component {
 		return (
 			<div>
 				{/* <Button onClick={() => this.setState({show: true})}>Open Left</Button> */}
-				<Drawer open={this.props.show}>
+				<Drawer open={this.props.show} onClose={() => this.props.closeDrawer()}>
 					<div
 						role="presentation"
 						onClick={() => this.props.closeDrawer()}
