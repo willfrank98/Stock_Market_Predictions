@@ -1,6 +1,7 @@
 import React from "react";
 import Container from '@material-ui/core/Container';
 import Graph from "./graph"
+import { Button } from "@material-ui/core";
 
 export default class GraphContainer extends React.Component {
 	constructor(props) {
@@ -11,8 +12,30 @@ export default class GraphContainer extends React.Component {
 		};
 	}
 
-	update_state_data(data) {
+	reseed_db() {
+		fetch("/seed-db")
+			.then(res => res.json())
+			.then(
+				(result) => {
+					console.log(result);
+				},
+				(error) => {
+					alert(error)
+				}
+			);
+	}
 
+	get_next_day() {
+		fetch("/get-next-day")
+			.then(res => res.json())
+			.then(
+				(result) => {
+					console.log(result);
+				},
+				(error) => {
+					alert(error)
+				}
+			);
 	}
 
 	componentDidMount() {
@@ -28,12 +51,14 @@ export default class GraphContainer extends React.Component {
 				(error) => {
 					alert(error)
 				}
-			)
+			);
 	}
 
 	render() {
 		return (
 			<Container maxWidth="md">
+				<Button onClick={() => this.reseed_db()}>Reseed database</Button>
+				<Button onClick={() => this.get_next_day()}>Get next day</Button>
 				{[...Array(10).keys()].map((text, index) => (
 					<div key={text}>
 						<h4>Tracking the last {index + 1} days</h4>

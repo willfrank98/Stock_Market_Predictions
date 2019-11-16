@@ -6,19 +6,23 @@ export default class Graph extends React.Component {
 	render() {
 		return (
 			<Container maxWidth="sm">
-				<VictoryChart domainPadding={{x: [10, 10], y: 5}} theme={VictoryTheme.material} height={250} width={300}>
+				<VictoryChart 
+					domainPadding={{x: [10, 10], y: 5}} 
+					theme={VictoryTheme.material} 
+					height={250} 
+					width={300}
+					domain={{ y: [23000, 26000] }}
+					// padding={{ left: 200, top: 0, right: 0, bottom: 200 }}
+				>
 					<VictoryAxis
-					// tickValues={[1, 2, 3, 4]}
-					// tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
 						fixLabelOverlap={true}
 						style={{tickLabels: {fontSize: 10, padding: 10, angle: -30}}}
+
 					/>
 					<VictoryAxis
 						dependentAxis
-						// tickFormat specifies how ticks should be displayed
 						tickFormat={(x) => (`${x / 1000}k`)}
-						// tickFormat={(x) => ("$" + (x/1000).toString().substr(0, 4) + "k")}
-						label="Closing Value ($)"
+						// label="Closing Value ($)"
 						style={{axisLabel: {fontSize: 12, padding: 39},
 								tickLabels: {fontSize: 10, padding: 3}}}
 					/>

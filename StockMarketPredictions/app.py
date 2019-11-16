@@ -26,13 +26,14 @@ def get_graph_data(offset):
 	}
 	return jsonify(result)
 
-@app.route('/add-db-entry')
-def add_db_entry():
+@app.route('/get-next-day')
+def get_next_day():
 	articles = get_news_today()
 	cleanse_articles(articles)
 	combine_fin_data()
 	do_final_prep()
 	do_nn()
+	return get_graph_data(0)
 
 class Prediction(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -54,7 +55,7 @@ def seed_db():
 		db_row = Prediction(date=line[0], prediction=float(prediction), closing=float(line[-1]))
 		db.session.add(db_row)
 	db.session.commit()
-	return "db seeded"
+	return jsonify("db seeded")
 
 if __name__ == '__main__':
 	app.run(debug=True)
