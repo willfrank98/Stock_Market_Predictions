@@ -1,6 +1,12 @@
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
+from pymodules.nyt_scraper import get_news_today
+from pymodules.nyt_cleanser import cleanse_articles
+from pymodules.fin_data_combiner import combine_fin_data
+from pymodules.data_prep import do_final_prep
+from pymodules.nn import do_nn
+
 app = Flask(__name__, static_folder='static/dist', template_folder='templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
@@ -19,6 +25,14 @@ def get_graph_data(offset):
 		'predictions': [1 if row.prediction > 0 else -1 for row in data]
 	}
 	return jsonify(result)
+
+@app.route('/add-db-entry')
+def add_db_entry():
+	articles = get_news_today()
+	cleanse_articles(articles)
+	combine_fin_data()
+	do_final_prep()
+	do_nn()
 
 class Prediction(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

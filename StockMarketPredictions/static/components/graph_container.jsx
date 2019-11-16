@@ -6,12 +6,7 @@ export default class GraphContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			stock_data: [
-				{ date: "11-01-2019", value: 13000 },
-				{ date: "11-02-2019", value: 16500 },
-				{ date: "11-03-2019", value: 14250 },
-				{ date: "11-04-2019", value: 19000 }
-			],
+			stock_data: new Array(10),
 			predictions: new Array(10)
 		};
 	}
