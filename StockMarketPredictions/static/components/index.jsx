@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import Graph from "./graph"
 import Nav_n_Drawer from "./nav_n_drawer"
+import GraphContainer from "./graph_container"
 
 class Index extends React.Component {
 	render() {
@@ -12,11 +12,7 @@ class Index extends React.Component {
 				<CssBaseline />
 				<Nav_n_Drawer />
 
-				<Container maxWidth="md">
-					{[...Array(10).keys()].map((text, index) => (
-						<Graph days={index + 1} key={text}/>
-					))}
-				</Container>
+				<GraphContainer />
 			</React.Fragment>
 		);
 	}
