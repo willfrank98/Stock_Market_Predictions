@@ -1,46 +1,46 @@
 import React from "react";
 import Container from '@material-ui/core/Container';
-import { VictoryLine, VictoryChart, VictoryAxis, VictoryTheme } from 'victory';
+import Grid from '@material-ui/core/Grid';
+import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalGridLines, LineSeries, DiscreteColorLegend } from 'react-vis';
 
 export default class Graph extends React.Component {
 	render() {
-		return (
-			<Container maxWidth="sm">
-				<VictoryChart 
-					domainPadding={{x: [10, 10], y: 5}} 
-					theme={VictoryTheme.material} 
-					height={250} 
-					width={300}
-					domain={{ y: [23000, 26000] }}
-					// padding={{ left: 200, top: 0, right: 0, bottom: 200 }}
-				>
-					<VictoryAxis
-						fixLabelOverlap={true}
-						style={{tickLabels: {fontSize: 10, padding: 10, angle: -30}}}
+		const ITEMS = [
+			'Closing Values',
+			'Prediction',
+		];
 
-					/>
-					<VictoryAxis
-						dependentAxis
-						tickFormat={(x) => (`${x / 1000}k`)}
-						// label="Closing Value ($)"
-						style={{axisLabel: {fontSize: 12, padding: 39},
-								tickLabels: {fontSize: 10, padding: 3}}}
-					/>
-					<VictoryLine	// Stock tracking line
-						data={this.props.stock_data}
-						x="date"
-						y="value"
-					/>
-					<VictoryLine	// Prediction line
-						data={this.props.prediction_data}
-						style={{
-							data: { stroke: this.props.prediction > 0 ? "#33691e" : "#b71c1c" },
-						}}
-						x="date"
-						y="value"
-					/>
-				</VictoryChart>
-			</Container>
+		let legend;
+		if (this.props.days == 1) {
+			legend = <DiscreteColorLegend height={100} width={200} items={ITEMS} />
+		}
+
+		return (
+			<Grid
+				container
+				direction="row"
+				justify="center"
+				alignItems="flex-start"
+			>
+				<Grid item xs={8}>
+					<XYPlot height={300} width={500} margin={{ left: 80, right: 10, top: 10, bottom: 80 }}>
+						<VerticalGridLines />
+						<HorizontalGridLines />
+						<XAxis
+							tickFormat={(x, i) => (this.props.date_list[i])}
+							tickLabelAngle={-45}
+						/>
+						<YAxis
+							tickFormat={(x) => (`${x / 1000}k`)}
+						/>
+						<LineSeries data={this.props.stock_data} />
+						<LineSeries data={this.props.prediction_data} />
+					</XYPlot>
+				</Grid>
+				<Grid item xs>
+					{legend}
+				</Grid>
+			</Grid>
 		);
 	}
 }

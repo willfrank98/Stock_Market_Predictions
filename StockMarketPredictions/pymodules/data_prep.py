@@ -6,10 +6,10 @@ import pandas as pd
 
 def do_final_prep():
 	## Load/Format Data ##
-	data = pd.read_hdf('working_files/combined_data.h5', key='combined')
+	data = pd.read_hdf('pymodules/working_files/combined_data.h5', key='combined')
 
 	# Open vectorizer from file and use it
-	with open('data_models/tfidf.pk', 'rb') as fin:
+	with open('pymodules/models/tfidf.pk', 'rb') as fin:
 		tfidf = pickle.load(fin)
 
 	data_tf = tfidf.transform(data['Text'])
@@ -41,10 +41,14 @@ def do_final_prep():
 	feature_names.extend(words)
 
 	# scale features and labels to gaussian distribution
-	with open('data_models/scaler.pk', 'rb') as fin:
-		scaler = pickle.load(fin)
-	data_x = scaler.transform(data_x)
+	with open('pymodules/models/scaler_x.pk', 'rb') as fin:
+		scaler_x = pickle.load(fin)
+	data_x = scaler_x.transform(data_x)
+
+	# with open('pymodules/models/scaler_y.pk', 'rb') as fin:
+	# 	scaler_y = pickle.load(fin)
+	# data_y = scaler_x.transform(data_x)
 
 	# save prepped data
 	data_final = pd.DataFrame(data_x, columns=feature_names)
-	data_final.to_hdf('working_files/prepped_data.h5', key='data')
+	data_final.to_hdf('pymodules/working_files/prepped_data.h5', key='data')

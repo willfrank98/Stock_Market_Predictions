@@ -17,22 +17,33 @@ def index():
 
 @app.route('/get-graph-data/<int:offset>')
 def get_graph_data(offset):
-	data = Prediction.query.order_by(Prediction.date).limit(20 + offset).all()[offset:]
+	data = Prediction.query.order_by(Prediction.date.desc()).limit(10 + offset).all()[offset:]
 	# massage results into graphs' format
-	result = {
-		'stock_data': [{ 'date': row.date, 'value': row.closing } for row in data],
-		# 'prediction_data': [{ 'date': row.date, 'value': row.closing } for row in data],
-		'predictions': [1 if row.prediction > 0 else -1 for row in data]
-	}
-	return jsonify(result)
+	date_list = []
+	stock_data = []
+	prediction_data = []
+	for i in range(10):
+		date_list += [[row.date for row in data[i::-1]]]
+
+		stock_data += [[{'x': idx, 'y': row.closing} for idx, row in enumerate(data[i::-1])]]
+		prediction_data += [[{'x': idx, 'y': data[i].closing} for idx in range(10)]]
+
+	predictions = [row.prediction for row in data]
+
+	return jsonify({'date_list': date_list, 'stock_data': stock_data, 'prediction_data': prediction_data, 'predictions': predictions})
 
 @app.route('/get-next-day')
 def get_next_day():
-	articles = get_news_today()
+	date = '2019-11-04'
+	articles = get_news_today(date)
 	cleanse_articles(articles)
-	combine_fin_data()
+	closing = combine_fin_data(date)
 	do_final_prep()
-	do_nn()
+	prediction = do_nn()
+	# add row to db
+	db.session.add(Prediction(date=date, prediction=prediction, closing=closing))
+	db.session.commit()
+	# return new graph data
 	return get_graph_data(0)
 
 class Prediction(db.Model):

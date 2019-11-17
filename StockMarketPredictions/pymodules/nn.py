@@ -4,19 +4,20 @@ from tensorflow.keras.models import load_model
 
 def do_nn():
 	## Load Data ##
-	data_x = pd.read_hdf('prepped_data.h5', key='data', index_col=False)
+	data_x = pd.read_hdf('pymodules/working_files/prepped_data.h5', key='data', index_col=False)
 
 	## Load Neural Network ##
 
-	model = load_model('data_models/trained_model.h5')
+	model = load_model('pymodules/models/trained_model.h5')
 
 	## Evaluate Day ##
 
 	prediction = model.predict(data_x.values)
-	print(prediction)
+	# print(prediction)
 
-	with open('data_models/scaler.pk', 'rb') as fin:
+	with open('pymodules/models/scaler_y.pk', 'rb') as fin:
 		scaler = pickle.load(fin)
 	prediction = scaler.inverse_transform(prediction)
 
-	print(prediction)
+	# print(prediction)
+	return prediction[0][0]

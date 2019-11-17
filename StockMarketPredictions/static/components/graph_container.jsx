@@ -8,7 +8,9 @@ export default class GraphContainer extends React.Component {
 		super(props);
 		this.state = {
 			stock_data: new Array(10),
-			predictions: new Array(10)
+			prediction_data: new Array(10),
+			predictions: new Array(10),			
+			date_list: new Array(10),	
 		};
 	}
 
@@ -43,9 +45,12 @@ export default class GraphContainer extends React.Component {
 			.then(res => res.json())
 			.then(
 				(result) => {
+					console.log(result);
 					this.setState({
 						stock_data: result["stock_data"],
-						predictions: result["predictions"]
+						prediction_data: result["prediction_data"],
+						predictions: result["predictions"],
+						date_list: result["date_list"],
 					});
 				},
 				(error) => {
@@ -64,8 +69,9 @@ export default class GraphContainer extends React.Component {
 						<h4>Tracking the last {index + 1} days</h4>
 						<Graph
 							days={index + 1}
-							stock_data={this.state.stock_data.slice(index, index + index + 1)}
-							prediction_data={this.state.stock_data.slice(index, index + 10).map((obj) => ({ date: obj['date'], value: this.state.stock_data[index]['value'] }))}
+							date_list={this.state.date_list[index]}
+							stock_data={this.state.stock_data[index]}
+							prediction_data={this.state.prediction_data[index]}
 							prediction={this.state.predictions[index]}
 						/>
 					</div>

@@ -2,9 +2,9 @@ import re
 import requests
 from unidecode import unidecode
 
-day = '11'
-month = '11'
-year = '2019'
+# day = '30'
+# month = '10'
+# year = '2019'
 
 # does something with weird unicode characters, I forget
 regex = re.compile(r'&#(?!\s)((?:(?!;).)*)(?<!\s);')
@@ -28,15 +28,17 @@ def cleanse(string):
     stripped = ''.join([c for c in string if 0 < ord(c) < 127])
     return ' '.join(stripped.split()).replace(';', ',').lower()
 
-key = 'fPBRdiPMKv8E4lUH4knZ0EhzxzpuB3J8'
+key = 'dNqKVxCzozGR5AWJXiXrLPZWwAMPBggs'
 
-def get_news_today():
+def get_news_today(target_date):
 	# output = open('todays_articles.csv', 'w')
-	output = {'date': [], 'abstract': [], 'headline': [], 'lead_paragraph': [], 
-                    'news_desk': [], 'doc_type': [], 'mat_type': []}
+	output = {'Date': [], 'Headline': [], 'Abstract': [], 'Lead Paragraph': [], 
+                    'News Desk': [], 'Doc Type': [], 'Material Type': []}
 	# output.write('Date;Headline;Lead Paragraph;News Desk;Doc Type;Material Type\n')
 
 	# send api request
+	year = target_date[0:4]
+	month = target_date[5:7]
 	response = requests.get('https://api.nytimes.com/svc/archive/v1/' + year + '/' + month + '.json?api-key=' + key)
 
 	# iterate each article
@@ -45,7 +47,7 @@ def get_news_today():
 	for article in docs:
 
 		# only get articles from today
-		if article['pub_date'][:10] != year + '-' + month + '-' + day:
+		if article['pub_date'][:10] != target_date:
 			continue
 
 		#check for and cleanse inputs
@@ -75,12 +77,12 @@ def get_news_today():
 		# output.write(date + ';' + headline + ';' + lead_paragraph + ';' + news_desk + ';' + doc_type + ';' + mat_type + '\n')
 		# output += [{'date': date, 'headline': headline, 'lead_paragraph':  lead_paragraph,
         #             'news_desk': news_desk, 'doc_type': doc_type, 'mat_type': mat_type}]
-		output['date'] += date
-		output['headline'] += headline
-		output['abstract'] += abstract
-		output['lead_paragraph'] += lead_paragraph
-		output['news_desk'] += news_desk
-		output['doc_type'] += doc_type
-		output['mat_type'] += mat_type
+		output['Date'] += [date]
+		output['Headline'] += [headline]
+		output['Abstract'] += [abstract]
+		output['Lead Paragraph'] += [lead_paragraph]
+		output['News Desk'] += [news_desk]
+		output['Doc Type'] += [doc_type]
+		output['Material Type'] += [mat_type]
 
 	return output

@@ -4,7 +4,7 @@ def cleanse_articles(articles):
 	# loads data into dataframe and sorts by date
 	# the NYT api sometimes returns articles imperfectly ordered by date
 	# articles = pd.read_csv('todays_articles.csv', sep=';', error_bad_lines=False)
-	articles = pd.from_dict(articles)
+	articles = pd.DataFrame.from_dict(articles)
 
 	# these headline'd articles contain no useful information
 	bad_headlines = ['year-end stock tables', 'key rates', 'dividend meetings', 'economic calendar', 'corrections']
@@ -24,7 +24,7 @@ def cleanse_articles(articles):
 	del temp_df
 
 	# drop undesired columns  and sort by date before appending
-	in_year = in_year.drop(['Headline', 'Abstract', 'News Desk', 'Doc Type', 'Material Type'], axis=1)
+	articles = articles.drop(['Headline', 'Abstract', 'News Desk', 'Doc Type', 'Material Type'], axis=1)
 	articles = articles.sort_values('Date').reset_index()
 
 	# rename desired field to Text
@@ -33,4 +33,4 @@ def cleanse_articles(articles):
 	# save to file
 	output = pd.DataFrame()
 	output = output.append(articles, ignore_index=True)
-	output.to_hdf('working_files/todays_articles_cleaner.h5', key='clean')
+	output.to_hdf('pymodules/working_files/todays_articles_cleaner.h5', key='clean')

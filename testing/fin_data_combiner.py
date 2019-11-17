@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+from datetime import datetime
 
 news_input = pd.read_hdf('todays_articles_cleaner.h5', key='clean').drop('index', axis=1)
 
@@ -10,27 +11,35 @@ headers = {
     'x-rapidapi-host': "apidojo-yahoo-finance-v1.p.rapidapi.com",
     'x-rapidapi-key': "815438e6dcmsh77769002d11c1a5p121a4ajsn426ca3d155df"
     }
-response = requests.request("GET", url, headers=headers, params=querystring)
+response = requests.request("GET", url, headers=headers, params=querystring).json()['chart']['result'][0]
+timestamps = response['timestamp']
 
-dji_raw = response.json()['chart']['result'][0]['indicators']['quote'][0]
+dji_raw = response['indicators']['quote'][0]
+
+# figure out which index we're looking for
+timestamp = None
+for i, stamp in enumerate(timestamps):
+	dt = datetime.fromtimestamp(stamp)
+	if str(dt)[:10] == "2019-11-04":
+		timestamp = i
 
 # gathers information about performance over the past x days
-dji_data = {'Date': '2019-11-11'}
+dji_data = {'Date': '2019-11-04'}
 for i in range(1, 11):
-    	dji_data['prev' + str(i) + 'Days'] = (dji_raw['open'][-1] - dji_raw['open'][-1 - i]) / dji_raw['open'][-1]
+    	dji_data['prev' + str(i) + 'Days'] = (dji_raw['open'][timestamp] - dji_raw['open'][timestamp - i]) / dji_raw['open'][timestamp]
 
 # create prevVolume, PrevHigh, and PrevLow, scaled to Open
-dji_data['prevVolume'] = dji_raw['volume'][-2] / dji_raw['open'][-1]
-dji_data['prevHigh'] = dji_raw['high'][-2] / dji_raw['open'][-1]
-dji_data['prevLow'] = dji_raw['low'][-2] / dji_raw['open'][-1]
+dji_data['prevVolume'] = dji_raw['volume'][timestamp - 1] / dji_raw['open'][timestamp]
+dji_data['prevHigh'] = dji_raw['high'][timestamp - 1] / dji_raw['open'][timestamp]
+dji_data['prevLow'] = dji_raw['low'][timestamp - 1] / dji_raw['open'][timestamp]
 
 # gets other stock market information
-dji_data['Open'] = dji_raw['open'][-1]
-dji_data['High'] = dji_raw['high'][-1]
-dji_data['Low'] = dji_raw['low'][-1]
-dji_data['Close'] = dji_raw['close'][-1]
-dji_data['Volume'] = dji_raw['volume'][-1]
-dji_data['Adj Close'] = response.json()['chart']['result'][0]['indicators']['adjclose'][0]['adjclose'][-1]
+dji_data['Open'] = dji_raw['open'][timestamp]
+dji_data['High'] = dji_raw['high'][timestamp]
+dji_data['Low'] = dji_raw['low'][timestamp]
+dji_data['Close'] = dji_raw['close'][timestamp]
+dji_data['Volume'] = dji_raw['volume'][timestamp]
+dji_data['Adj Close'] = response['indicators']['adjclose'][0]['adjclose'][timestamp]
 
 # format news_input's Date column
 # drops precision finer than one day
