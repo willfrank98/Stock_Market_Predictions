@@ -2,7 +2,7 @@ from datetime import datetime
 import pandas as pd
 import requests
 
-def combine_fin_data(date):
+def combine_fin_data(date, api_key):
 	news_input = pd.read_hdf('pymodules/working_files/todays_articles_cleaner.h5', key='clean').drop('index', axis=1)
 
 	# get relevant financial information for today
@@ -10,7 +10,7 @@ def combine_fin_data(date):
 	querystring = {'region':'US','lang':'en','symbol':'^DJI','interval':'1d','range':'3mo'}
 	headers = {
 		'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-		'x-rapidapi-key': '815438e6dcmsh77769002d11c1a5p121a4ajsn426ca3d155df'
+		'x-rapidapi-key': api_key
 		}
 	response = requests.request('GET', url, headers=headers, params=querystring)
 	response = response.json()['chart']['result'][0]
@@ -24,6 +24,9 @@ def combine_fin_data(date):
 		dt = datetime.fromtimestamp(stamp)
 		if str(dt)[:10] == date:
 			timestamp = i
+
+	if timestamp is None:
+		return None
 
 	# gathers information about performance over the past x days
 	dji_data = {'Date': date}

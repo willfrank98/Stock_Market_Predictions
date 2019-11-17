@@ -28,9 +28,7 @@ def cleanse(string):
     stripped = ''.join([c for c in string if 0 < ord(c) < 127])
     return ' '.join(stripped.split()).replace(';', ',').lower()
 
-key = 'dNqKVxCzozGR5AWJXiXrLPZWwAMPBggs'
-
-def get_news_today(target_date):
+def get_news_today(target_date, api_key):
 	# output = open('todays_articles.csv', 'w')
 	output = {'Date': [], 'Headline': [], 'Abstract': [], 'Lead Paragraph': [], 
                     'News Desk': [], 'Doc Type': [], 'Material Type': []}
@@ -39,7 +37,7 @@ def get_news_today(target_date):
 	# send api request
 	year = target_date[0:4]
 	month = target_date[5:7]
-	response = requests.get('https://api.nytimes.com/svc/archive/v1/' + year + '/' + month + '.json?api-key=' + key)
+	response = requests.get('https://api.nytimes.com/svc/archive/v1/' + year + '/' + month + '.json?api-key=' + api_key)
 
 	# iterate each article
 	json = response.json()

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 from pymodules.nyt_scraper import get_news_today
 from pymodules.nyt_cleanser import cleanse_articles
@@ -8,7 +9,7 @@ from pymodules.data_prep import do_final_prep
 from pymodules.nn import do_nn
 
 app = Flask(__name__, static_folder='static/dist', template_folder='templates')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config.from_pyfile('../secrets/secrets.py')
 db = SQLAlchemy(app)
 
 @app.route('/')
@@ -32,19 +33,22 @@ def get_graph_data(offset):
 
 	return jsonify({'date_list': date_list, 'stock_data': stock_data, 'prediction_data': prediction_data, 'predictions': predictions})
 
-@app.route('/get-next-day')
+# @app.route('/get-next-day')
 def get_next_day():
-	date = '2019-11-04'
-	articles = get_news_today(date)
+	date = datetime.today().strftime('%Y-%m-%d')
+	articles = get_news_today(date, app.config['NYT_API'])
 	cleanse_articles(articles)
-	closing = combine_fin_data(date)
+	closing = combine_fin_data(date, app.config['DJI_API'])
+	if closing is None:
+		return None
+		# return jsonify("could not get DJI entry for " + date)
 	do_final_prep()
 	prediction = do_nn()
 	# add row to db
 	db.session.add(Prediction(date=date, prediction=prediction, closing=closing))
 	db.session.commit()
 	# return new graph data
-	return get_graph_data(0)
+	# return get_graph_data(0)
 
 class Prediction(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

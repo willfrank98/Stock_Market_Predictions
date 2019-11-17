@@ -45,7 +45,6 @@ export default class GraphContainer extends React.Component {
 			.then(res => res.json())
 			.then(
 				(result) => {
-					console.log(result);
 					this.setState({
 						stock_data: result["stock_data"],
 						prediction_data: result["prediction_data"],
