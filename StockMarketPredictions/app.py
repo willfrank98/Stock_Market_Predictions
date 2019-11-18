@@ -78,4 +78,4 @@ def seed_db():
 	return jsonify("db seeded")
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(port=int("80"))
