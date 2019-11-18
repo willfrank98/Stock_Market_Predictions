@@ -62,7 +62,7 @@ class FreeDrawer extends React.Component {
 	render() {
 		return (
 			<div>
-				<Drawer open={this.props.show} onClose={() => this.props.closeDrawer()}>
+				<Drawer open={this.props.show} onClose={() => this.props.closeDrawer()} >
 					<div
 						role="presentation"
 						onClick={() => this.props.closeDrawer()}

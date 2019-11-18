@@ -61,19 +61,15 @@ export default class GraphContainer extends React.Component {
 	render() {
 		return (
 			<Container maxWidth="md">
-				<Button onClick={() => this.reseed_db()}>Reseed database</Button>
-				<Button onClick={() => this.get_next_day()}>Get next day</Button>
 				{[...Array(10).keys()].map((text, index) => (
-					<div key={text}>
-						<h4>Tracking the last {index + 1} days</h4>
-						<Graph
-							days={index + 1}
-							date_list={this.state.date_list[index]}
-							stock_data={this.state.stock_data[index]}
-							prediction_data={this.state.prediction_data[index]}
-							prediction={this.state.predictions[index]}
-						/>
-					</div>
+					<Graph
+						key={text}
+						days={index + 1}
+						date_list={this.state.date_list[index]}
+						stock_data={this.state.stock_data[index]}
+						prediction_data={this.state.prediction_data[index]}
+						prediction={this.state.predictions[index]}
+					/>
 				))}
 			</Container>
 		);

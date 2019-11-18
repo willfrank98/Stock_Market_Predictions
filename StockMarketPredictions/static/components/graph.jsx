@@ -1,29 +1,41 @@
 import React from "react";
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalGridLines, LineSeries, DiscreteColorLegend } from 'react-vis';
+import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalGridLines, LineSeries, LineMarkSeries } from 'react-vis';
 
 export default class Graph extends React.Component {
+	// constructor(props) {
+	// 	super(props);
+	// 	this.state = {
+	// 		stock_data: new Array(10),
+	// 		prediction_data: new Array(10),
+	// 		predictions: new Array(10),			
+	// 		date_list: new Array(10),	
+	// 	};
+	// }
+
 	render() {
-		const ITEMS = [
-			'Closing Values',
-			'Prediction',
-		];
-
-		let legend;
-		if (this.props.days == 1) {
-			legend = <DiscreteColorLegend height={100} width={200} items={ITEMS} />
+		var yMin = 20000, yMax = 30000;
+		if (this.props.stock_data !== undefined) {
+			yMin = this.props.stock_data[0]['y'] - 500;
+			yMax = this.props.stock_data[0]['y'] + 500;
 		}
-
 		return (
 			<Grid
 				container
-				direction="row"
+				direction="column"
 				justify="center"
 				alignItems="flex-start"
 			>
-				<Grid item xs={8}>
-					<XYPlot height={300} width={500} margin={{ left: 80, right: 10, top: 10, bottom: 80 }}>
+				<Grid item>
+					<h4>Tracking the last {this.props.days} days</h4>
+				</Grid>
+				<Grid item>
+					<XYPlot 
+						height={400} 
+						width={600} 
+						margin={{ left: 80, right: 10, top: 10, bottom: 80 }}
+						yDomain={[yMin, yMax]}
+					>
 						<VerticalGridLines />
 						<HorizontalGridLines />
 						<XAxis
@@ -33,12 +45,9 @@ export default class Graph extends React.Component {
 						<YAxis
 							tickFormat={(x) => (`${x / 1000}k`)}
 						/>
-						<LineSeries data={this.props.stock_data} />
-						<LineSeries data={this.props.prediction_data} />
+						<LineMarkSeries data={this.props.stock_data} color="#3f51b5" />
+						<LineSeries data={this.props.prediction_data} color={this.props.prediction > 0 ? "#3f51b5" : "b71c1c"} />
 					</XYPlot>
-				</Grid>
-				<Grid item xs>
-					{legend}
 				</Grid>
 			</Grid>
 		);
