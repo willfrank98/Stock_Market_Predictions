@@ -16,6 +16,7 @@ def cleanse_articles(articles):
 	articles = articles[articles['Lead Paragraph'] != 'none']
 
 	# makes sure article is from certain 'news desks'
+	articles['News Desk'] = articles['News Desk'].astype(str)
 	temp_df = pd.DataFrame()
 	for desk in ['business', 'commerce', 'career', 'invest', 'real estate', 'financ', 'job', 'foreign', 'national']:
 		temp = articles[articles['News Desk'].str.contains(desk)]
