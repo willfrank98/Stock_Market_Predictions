@@ -60,7 +60,7 @@ export default class GraphContainer extends React.Component {
 
 	render() {
 		return (
-			<Container maxWidth="md">
+			<Container maxWidth="lg">
 				{[...Array(10).keys()].map((text, index) => (
 					<Graph
 						key={text}

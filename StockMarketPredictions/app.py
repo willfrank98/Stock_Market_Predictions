@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, date, timedelta
+import click
 
 from pymodules.nyt_scraper import get_news_today
 from pymodules.nyt_cleanser import cleanse_articles
@@ -63,8 +65,11 @@ class Prediction(db.Model):
 	# row = db.Column(db.PickleType, nullable=False) //store data row as pickle!.. ?
 
 
-@app.route('/seed-db')
-def seed_db():
+@app.route('/reseed-db/<string:db_key>')
+def reseed_db(db_key):
+	if db_key != app.config['DB_KEY']:
+		return jsonify("INVALID DB ACCESS KEY")
+
 	db.create_all()
 	Prediction.query.delete()
 	data = open("2019-preload-data.csv", "rt")
@@ -74,8 +79,27 @@ def seed_db():
 		line = line.split(',')
 		db_row = Prediction(date=line[0], prediction=float(prediction), closing=float(line[-1]))
 		db.session.add(db_row)
+
+	start = date(2019, 11, 2)
+	end = date.today()
+	delta = end - start
+
+	for i in range(delta.days + 1):
+		day = start + timedelta(days=i)
+		row_date = day.strftime('%Y-%m-%d')
+		articles = get_news_today(row_date, app.config['NYT_API'])
+		cleanse_articles(articles)
+		closing = combine_fin_data(row_date, app.config['DJI_API'])
+		if closing is None:
+			continue
+		do_final_prep()
+		prediction = do_nn()
+		db.session.add(Prediction(date=row_date, prediction=prediction, closing=closing))
+
 	db.session.commit()
 	return jsonify("db seeded")
 
 if __name__ == '__main__':
 	app.run(host="0.0.0.0", port=80)
+	# app.run(debug=True)
+	

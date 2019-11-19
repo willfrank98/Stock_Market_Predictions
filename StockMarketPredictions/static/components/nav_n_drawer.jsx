@@ -12,6 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
+import PersonIcon from '@material-ui/icons/Person';
 
 export default class Nav_n_Drawer extends React.Component {
 	constructor(props) {
@@ -79,6 +80,12 @@ class FreeDrawer extends React.Component {
 								<ListItem button key="About">
 									<ListItemIcon><InfoIcon /></ListItemIcon>
 									<ListItemText primary="About" />
+								</ListItem>
+							</Link>
+							<Link href="https://willfrank98.github.io/" underline="none" color="inherit">
+								<ListItem button key="More">
+									<ListItemIcon><PersonIcon /></ListItemIcon>
+									<ListItemText primary="More Will Frank" />
 								</ListItem>
 							</Link>
 						</List>

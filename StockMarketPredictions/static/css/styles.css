@@ -2,10 +2,61 @@ body {
 	margin: 0;
 }
 
+/* Drawer */
 .MuiDrawer-paper {
-	width: 11em;
+	width: 15em;
 }
 
-.header-grid {
-	margin-left: 5em;
+.header-box {
+	margin-left: 15vw;
+	margin-right: 40vw;
+	display: flex;
+	flex-direction: row;
+}
+
+.header-sub-box {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+.header-sub-box-lower {
+	margin-left: 5vw;
+}
+
+.header-sub-box > p {
+	margin: 5px;
+}
+
+@media (max-width: 900px) {
+	.header-box {
+		margin-left: 5px;
+		margin-right: 5px;
+		display: flex;
+		flex-direction: row;
+	}
+	
+	.header-sub-box {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+	
+	.header-sub-box > p {
+		margin: 5px;
+	}
+}
+
+
+/* Sets size of graph */
+.graph-div {
+	height: 400px;
+	width: 600px;
+}
+
+@media (max-width: 620px) {
+	.graph-div {
+		height: 300px;
+		width: calc(95vw - 16px);
+	}
 }

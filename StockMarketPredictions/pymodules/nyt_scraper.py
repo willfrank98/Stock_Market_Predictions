@@ -1,6 +1,7 @@
 import re
 import requests
 from unidecode import unidecode
+from time import sleep
 
 # day = '30'
 # month = '10'
@@ -29,10 +30,11 @@ def cleanse(string):
     return ' '.join(stripped.split()).replace(';', ',').lower()
 
 def get_news_today(target_date, api_key):
-	# output = open('todays_articles.csv', 'w')
 	output = {'Date': [], 'Headline': [], 'Abstract': [], 'Lead Paragraph': [], 
                     'News Desk': [], 'Doc Type': [], 'Material Type': []}
-	# output.write('Date;Headline;Lead Paragraph;News Desk;Doc Type;Material Type\n')
+
+	# sleep for 6 seconds to ensure too many requests are not sent
+	sleep(6)
 
 	# send api request
 	year = target_date[0:4]
