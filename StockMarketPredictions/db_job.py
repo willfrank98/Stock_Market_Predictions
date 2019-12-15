@@ -11,5 +11,5 @@ with open("secrets/secrets.py") as f:
 			db_key = val[2:len(val)-1]
 
 
-r = requests.get('http://127.0.0.1:5000/get-next-day/' + db_key)
+r = requests.get('http://127.0.0.1/get-next-day/' + db_key)
 print(r.json())
