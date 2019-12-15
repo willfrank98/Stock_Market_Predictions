@@ -4,7 +4,7 @@ import sys
 
 os.environ['NO_PROXY'] = '127.0.0.1'
 
-db_key = sys.argv[2]
+db_key = sys.argv[1]
 with open("secrets/secrets.py") as f:
 	for line in f:
 		key, val = line.split('=')
